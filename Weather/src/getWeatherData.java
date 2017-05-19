@@ -5,6 +5,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import org.apache.poi.EncryptedDocumentException;
@@ -82,6 +84,10 @@ public class getWeatherData {
 	    Element element_wind = (Element) list_wind.item(0);
 	    
 	    
+	    //Getting the timestamp
+	    SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH.mm.ss");
+	    Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+	    String final_timestamp = sdf.format(timestamp);
 	    
 	    String temperature 	= element_temperature.getAttribute("value");
 	    String humidity 	= element_humidity.getAttribute("value");
@@ -89,7 +95,7 @@ public class getWeatherData {
 	    String wind_speed = (String)  element_wind.getElementsByTagName("speed").item(0).getAttributes().item(1).getNodeValue();
 	    
 	    //String wind_speed = (String)  element_wind.getAttribute("value");
-
+	    System.out.println("Time Stamp : " +final_timestamp );
 	    System.out.println("Current Temperature : " + Float.parseFloat(temperature));
 	    System.out.println("Humidity : " + Integer.parseInt(humidity));
 	    System.out.println("Pressure : " + Integer.parseInt(pressure));
@@ -97,29 +103,33 @@ public class getWeatherData {
 	    
 //Saving the data in the excel file
 	   int row_count=0;
+	   Row row=null;
+	   // The data is stored in teh list
 	   ArrayList<Object> list_weather_data = new ArrayList<Object>();
+	   list_weather_data.add(final_timestamp);
 	   list_weather_data.add(Float.parseFloat(temperature));
 	   list_weather_data.add(Float.parseFloat(humidity));
 	   list_weather_data.add(Float.parseFloat(pressure));
 	   list_weather_data.add(Float.parseFloat(wind_speed));
 	   
-	  //Read the spreadsheet that needs to be updated
+	   	//Read the spreadsheet that needs to be updated
 	    FileInputStream fie_input_stream= new FileInputStream(new File("/Users/balaji/Documents/Github/IOT/Weather/src/newFile.xlsx"));  
 	    //Access the workbook                  
 	    XSSFWorkbook workbook = new XSSFWorkbook(fie_input_stream);
 	    //Access the worksheet, so that we can update / modify it. 
 	    XSSFSheet worksheet = workbook.getSheet("Current Weather"); 
 	    row_count = worksheet.getLastRowNum();
-	    Row row=null;
+	   
 	    if(row_count!=0)
 	    row = worksheet.createRow(++row_count);
 	    else {
-	    	System.out.println("Went inside");
+	    	//System.out.println("Went inside");
 	    	row = worksheet.createRow(row_count);
-	    	row.createCell(0).setCellValue("Temperature");
-	    	row.createCell(1).setCellValue("Humidity");
-	    	row.createCell(2).setCellValue("Pressure");
-	    	row.createCell(3).setCellValue("Wind Speed");
+	    	row.createCell(0).setCellValue("Time Stamp");
+	    	row.createCell(1).setCellValue("Temperature");
+	    	row.createCell(2).setCellValue("Humidity");
+	    	row.createCell(3).setCellValue("Pressure");
+	    	row.createCell(4).setCellValue("Wind Speed");
 	    	
 	    	row = worksheet.createRow(++row_count);
 	    }
@@ -128,11 +138,11 @@ public class getWeatherData {
 	    Cell cell = null; 
 	    // Access the second cell in second row to update the value
 
-	    for(int i=0;i<4;i++){
-	    	
-	    	row.createCell(column_count).setCellValue((Float) list_weather_data.get(i));
+	    for(int i=0;i<5;i++){
+	    	if(i==0) row.createCell(column_count).setCellValue(final_timestamp);
+	    	else row.createCell(column_count).setCellValue((Float) list_weather_data.get(i));
 	    	column_count++;
-	    	System.out.println(column_count);
+
 	    }
  
 	    fie_input_stream.close(); 
