@@ -5,12 +5,16 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
 
 import org.apache.poi.EncryptedDocumentException;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -46,7 +50,7 @@ public class getWeatherData {
 		String owmApiKey = "5565b5455185c3b4f75b4e906831705c"; 
 		String weatherCity = "Irvine,US";
 		byte forecastDays = 3;
-		int row_count=0,column_count=0;
+		int column_count=0;
 		OpenWeatherMap.Units units = (isMetric) ? OpenWeatherMap.Units.METRIC : OpenWeatherMap.Units.IMPERIAL;
 		OpenWeatherMap owm = new OpenWeatherMap(units, owmApiKey);
 
@@ -91,42 +95,98 @@ public class getWeatherData {
 	    System.out.println("Pressure : " + Integer.parseInt(pressure));
 	    System.out.println("Wind Speed : " + Float.parseFloat(wind_speed));
 	    
-	   //Saving the data in the excel file
-	    
+//Saving the data in the excel file
+	   int row_count=0;
+	   ArrayList<Object> list_weather_data = new ArrayList<Object>();
+	   list_weather_data.add(Float.parseFloat(temperature));
+	   list_weather_data.add(Float.parseFloat(humidity));
+	   list_weather_data.add(Float.parseFloat(pressure));
+	   list_weather_data.add(Float.parseFloat(wind_speed));
+	   
 	  //Read the spreadsheet that needs to be updated
-	    FileInputStream fsIP= new FileInputStream(new File("newFile.xlsx"));
+	    FileInputStream fie_input_stream= new FileInputStream(new File("/Users/balaji/Documents/Github/IOT/Weather/src/newFile.xlsx"));  
+	    //Access the workbook                  
+	    XSSFWorkbook workbook = new XSSFWorkbook(fie_input_stream);
+	    //Access the worksheet, so that we can update / modify it. 
+	    XSSFSheet worksheet = workbook.getSheet("Current Weather"); 
+	    row_count = worksheet.getLastRowNum();
+	    Row row=null;
+	    if(row_count!=0)
+	    row = worksheet.createRow(++row_count);
+	    else {
+	    	System.out.println("Went inside");
+	    	row = worksheet.createRow(row_count);
+	    	row.createCell(0).setCellValue("Temperature");
+	    	row.createCell(1).setCellValue("Humidity");
+	    	row.createCell(2).setCellValue("Pressure");
+	    	row.createCell(3).setCellValue("Wind Speed");
+	    	
+	    	row = worksheet.createRow(++row_count);
+	    }
 	    
-	    //create a blanc document
-        XSSFWorkbook wb = new XSSFWorkbook();
-        //create a black sheet
-        Sheet sheet = wb.createSheet("new sheet");
-        //create a new row 0
-        Row row = sheet.createRow((short)0);
-        
-        // Updating the headers
-        row.createCell(0).setCellValue("Temperature");
-        row.createCell(1).setCellValue("Humidity");
-        row.createCell(2).setCellValue("Pressure");
-        row.createCell(3).setCellValue("Wind Speed");
-        
-        // Create a new row 1
-        row = sheet.createRow((short)1);
-        //create a new cell
-        Cell cell = row.createCell(0);
-        //insert value in the created cell
-        cell.setCellValue(Float.parseFloat(temperature));
-    
-        //add other cells with different types
-       // row.createCell(0).setCellValue(Float.parseFloat(temperature));
-        row.createCell(1).setCellValue(Integer.parseInt(humidity));
-        row.createCell(2).setCellValue(Integer.parseInt(pressure));
-        row.createCell(3).setCellValue(Float.parseFloat(wind_speed));
-
-        FileOutputStream fos;
-     
-          fos= new FileOutputStream("newFile.xlsx");
-          wb.write(fos);
-          fos.close();
+	    // declare a Cell object
+	    Cell cell = null; 
+	    // Access the second cell in second row to update the value
+	    //row = worksheet.createRow(++row_count);
+	    for(int i=0;i<4;i++){
+	    	
+	    	row.createCell(column_count).setCellValue((Float) list_weather_data.get(i));
+	    	column_count++;
+	    	System.out.println(column_count);
+	    }
+	    //cell = worksheet.getRow(1).getCell(1);   
+	    // Get current cell value value and overwrite the value
+	    //cell.setCellValue("OverRide existing value123");
+	    //Close the InputStream  
+	    fie_input_stream.close(); 
+	    //Open FileOutputStream to write updates
+	    FileOutputStream output_file =new FileOutputStream(new File("/Users/balaji/Documents/Github/IOT/Weather/src/newFile.xlsx"));  
+	     //write changes
+	    workbook.write(output_file);
+	    //close the stream
+	    output_file.close();
+	    
+	    // Intermediate Code
+	    
+//	  //Read the spreadsheet that needs to be updated
+//	    FileInputStream fsIP= new FileInputStream(new File("newFile.xlsx"));
+//	    
+//	    //create a blanc document
+//        XSSFWorkbook wb = new XSSFWorkbook();
+//        //create a black sheet
+//        Sheet sheet = wb.createSheet("new sheet");
+//        //create a new row 0
+//        Row row = sheet.createRow((short)0);
+//        
+//        // Updating the headers
+//        row.createCell(0).setCellValue("Temperature");
+//        row.createCell(1).setCellValue("Humidity");
+//        row.createCell(2).setCellValue("Pressure");
+//        row.createCell(3).setCellValue("Wind Speed");
+//        
+//        // Create a new row 1
+//        row = sheet.createRow((short)1);
+//        //create a new cell
+//        Cell cell = row.createCell(0);
+//        //insert value in the created cell
+//        cell.setCellValue(Float.parseFloat(temperature));
+//    
+//        //add other cells with different types
+//       // row.createCell(0).setCellValue(Float.parseFloat(temperature));
+//        row.createCell(1).setCellValue(Integer.parseInt(humidity));
+//        row.createCell(2).setCellValue(Integer.parseInt(pressure));
+//        row.createCell(3).setCellValue(Float.parseFloat(wind_speed));
+//
+//        FileOutputStream fos;
+//     
+//          fos= new FileOutputStream("newFile.xlsx");
+//          wb.write(fos);
+//          fos.close();
+          
+          
+          //Past Code
+          
+          
 //	    FileInputStream input_stream =  new FileInputStream(new File(excel_weather_filepath));
 //	    Workbook workbook = WorkbookFactory.create(new FileInputStream(excel_weather_filepath));
 //	    Sheet sheet = workbook.getSheetAt(0);
