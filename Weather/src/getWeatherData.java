@@ -1,24 +1,15 @@
 
 
-import java.awt.List;
-import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.TreeSet;
 
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.DocumentBuilder;
@@ -28,20 +19,32 @@ import org.xml.sax.SAXException;
 
 import net.aksingh.owmjapis.OpenWeatherMap;
 
-import org.w3c.dom.Node;
-import org.w3c.dom.Element;
-import java.sql.Date;
 
+import org.w3c.dom.Element;
+
+
+
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 
 
 public class getWeatherData {
 
 	public static void main(String[] args) {
+		String excel_weather_filepath = "src/package_iot/weather_data.xlsx";
 		boolean isMetric = true;
 		String owmApiKey = "5565b5455185c3b4f75b4e906831705c"; 
 		String weatherCity = "Irvine,US";
 		byte forecastDays = 3;
+		int row_count=0,column_count=0;
 		OpenWeatherMap.Units units = (isMetric) ? OpenWeatherMap.Units.METRIC : OpenWeatherMap.Units.IMPERIAL;
 		OpenWeatherMap owm = new OpenWeatherMap(units, owmApiKey);
 
@@ -81,13 +84,69 @@ public class getWeatherData {
 	    
 	    //String wind_speed = (String)  element_wind.getAttribute("value");
 
-	    System.out.println("Current Temperature : " + temperature);
-	    System.out.println("Humidity : " + humidity);
-	    System.out.println("Pressure : " + pressure);
-	    System.out.println("Wind Speed : " + wind_speed);
+	    System.out.println("Current Temperature : " + Float.parseFloat(temperature));
+	    System.out.println("Humidity : " + Integer.parseInt(humidity));
+	    System.out.println("Pressure : " + Integer.parseInt(pressure));
+	    System.out.println("Wind Speed : " + Float.parseFloat(wind_speed));
 	    
-	    System.out.println ("Root element: " +  document.getDocumentElement().getNodeName());
-		}catch(Exception e){
+	   //Saving the data in the excel file
+	    
+	    //create a blanc document
+        XSSFWorkbook wb = new XSSFWorkbook();
+        //create a black sheet
+        Sheet sheet = wb.createSheet("new sheet");
+        //create a new row 0
+        Row row = sheet.createRow((short)0);
+        //create a new cell
+        Cell cell = row.createCell(0);
+        //insert value in the created cell
+        cell.setCellValue(1.4);
+    
+        //add other cells with different types
+        /*int*/row.createCell(1).setCellValue(7);
+        /*int*/row.createCell(2).setCellValue(99);
+        /*string*/row.createCell(3).setCellValue("string");
+        /*boolean*/row.createCell(4).setCellValue(true);
+
+        FileOutputStream fos;
+     
+          fos= new FileOutputStream("newFile.xlsx");
+          wb.write(fos);
+          fos.close();
+//	    FileInputStream input_stream =  new FileInputStream(new File(excel_weather_filepath));
+//	    Workbook workbook = WorkbookFactory.create(input_stream);
+//	    Sheet sheet = workbook.getSheetAt(0);
+//	    
+//	    Object[][] weather_data = {{Float.parseFloat(temperature),Integer.parseInt(humidity),Integer.parseInt(pressure),Float.parseFloat(wind_speed)}};
+//	    row_count = sheet.getLastRowNum();
+//	    
+//	    for(int i=0;i<4;i++){
+//	    	Row row = sheet.createRow(++row_count);
+//	    	
+//	    	Cell cell = row.createCell(column_count);
+//	    	cell.setCellValue(row_count);
+//	    	
+//	    	++column_count;
+//	    	cell.setCellValue((Float) Float.parseFloat(temperature));
+//	    	cell.setCellValue((Integer) Integer.parseInt(humidity));
+//	    	cell.setCellValue((Integer) Integer.parseInt(pressure));
+//	    	cell.setCellValue((Float) Float.parseFloat(wind_speed));
+//	    	
+//	    	input_stream.close();
+//	    	 
+//            FileOutputStream outputStream = new FileOutputStream("src/package_iot/weather_data.xlsx");
+//            workbook.write(outputStream);
+//            workbook.close();
+//            outputStream.close();
+//	    }
+		}catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParserConfigurationException e) {
+
+			e.printStackTrace();
+		} catch (SAXException e) {
 			e.printStackTrace();
 		}
 		
