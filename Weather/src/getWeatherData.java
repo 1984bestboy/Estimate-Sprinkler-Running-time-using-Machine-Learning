@@ -63,9 +63,28 @@ public class getWeatherData {
 	    NodeList  list_temperature = element_current.getElementsByTagName("temperature");
 	    Element element_temperature = (Element) list_temperature.item(0);
 	   
-	    String temperature = element_temperature.getAttribute("value");
+	    NodeList  list_humidity = element_current.getElementsByTagName("humidity");
+	    Element element_humidity = (Element) list_humidity.item(0);
 	    
+	    NodeList  list_pressure = element_current.getElementsByTagName("pressure");
+	    Element element_pressure = (Element) list_pressure.item(0);
+	    
+	    NodeList  list_wind = element_current.getElementsByTagName("wind");
+	    Element element_wind = (Element) list_wind.item(0);
+	    
+	    
+	    
+	    String temperature 	= element_temperature.getAttribute("value");
+	    String humidity 	= element_humidity.getAttribute("value");
+	    String pressure 		= element_pressure.getAttribute("value");; 
+	    String wind_speed = (String)  element_wind.getElementsByTagName("speed").item(0).getAttributes().item(1).getNodeValue();
+	    
+	    //String wind_speed = (String)  element_wind.getAttribute("value");
+
 	    System.out.println("Current Temperature : " + temperature);
+	    System.out.println("Humidity : " + humidity);
+	    System.out.println("Pressure : " + pressure);
+	    System.out.println("Wind Speed : " + wind_speed);
 	    
 	    System.out.println ("Root element: " +  document.getDocumentElement().getNodeName());
 		}catch(Exception e){
