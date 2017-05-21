@@ -78,10 +78,10 @@ public class getWeatherData {
 
 			NodeList list_forecast_time = element_forecast_weatherdata.getElementsByTagName("time");
 			Element element_forecast_time = (Element) list_forecast_data.item(0);
-
-			String forecast_time_form = element_forecast_time.getAttribute("from");
 			
-			String forecast_time_to = element_forecast_time.getAttribute("to");
+			String forecast_time_from = list_forecast_time.item(0).getAttributes().getNamedItem("from").getNodeValue();
+			
+			String forecast_time_to =list_forecast_time.item(0).getAttributes().getNamedItem("to").getNodeValue() ;
 
 			NodeList List_forecast_temperature = element_forecast_time.getElementsByTagName("temperature");
 			Element element_forecast_temperature = (Element) List_forecast_temperature.item(0);
@@ -110,7 +110,7 @@ public class getWeatherData {
 			System.out.println("Forecasted Humidity : " + forecast_humidity);
 			System.out.println("Forecasted Precipitation : " + forecast_precipitation);
 			System.out.println("Forecasted Wind Speed : " + forecast_windspeed);
-			System.out.println("Forecasted Time from : " + forecast_time_form);
+			System.out.println("Forecasted Time from : " + forecast_time_from);
 			System.out.println("Forecasted Time to : " + forecast_time_to);
 
 			System.out.println("Length : " + list_forecast_time.getLength());
@@ -170,6 +170,8 @@ public class getWeatherData {
 			list_weather_data.add(Float.parseFloat(humidity));
 			list_weather_data.add(Float.parseFloat(pressure));
 			list_weather_data.add(Float.parseFloat(wind_speed));
+			list_weather_data.add(forecast_time_from);
+			list_weather_data.add(forecast_time_to);
 			list_weather_data.add(Float.parseFloat(forecast_temperature));
 			list_weather_data.add(Float.parseFloat(forecast_pressure));
 			list_weather_data.add(Float.parseFloat(forecast_humidity));
@@ -199,13 +201,13 @@ public class getWeatherData {
 				row.createCell(2).setCellValue("Humidity (%)");
 				row.createCell(3).setCellValue("Pressure (hPa)");
 				row.createCell(4).setCellValue("Wind Speed (mps)");
-				row.createCell(4).setCellValue("Forecasted Time ( From )");
-				row.createCell(4).setCellValue("Forecasted Time ( To )");
-				row.createCell(5).setCellValue("Forecasted Temperature (celcius)");
-				row.createCell(6).setCellValue("Forecasted HUmidity (%)");
-				row.createCell(7).setCellValue("Forecasted Pressure (hPa)");
-				row.createCell(8).setCellValue("Forecasted Precipitation");
-				row.createCell(9).setCellValue("Forecasted Wind Speed (mps)");
+				row.createCell(5).setCellValue("Forecasted Time ( From )");
+				row.createCell(6).setCellValue("Forecasted Time ( To )");
+				row.createCell(7).setCellValue("Forecasted Temperature (celcius)");
+				row.createCell(8).setCellValue("Forecasted Pressure (hPa))");
+				row.createCell(9).setCellValue("Forecasted Humidity (%");
+				row.createCell(10).setCellValue("Forecasted Precipitation");
+				row.createCell(11).setCellValue("Forecasted Wind Speed (mps)");
 
 				row = worksheet.createRow(++row_count);
 			}
@@ -214,12 +216,14 @@ public class getWeatherData {
 			Cell cell = null;
 			// Access the second cell in second row to update the value
 
-			for (int i = 0; i < 10; i++) {
+			for (int i = 0; i < 12; i++) {
 				System.out.println("List Output : " + list_weather_data.get(i));
 				if (i == 0)
 					row.createCell(column_count).setCellValue(final_timestamp);
 				else if (list_weather_data.get(i).equals("") || list_weather_data.get(i).equals("null"))
 					row.createCell(column_count).setCellValue("");
+				
+				else if(i==5||i==6) row.createCell(column_count).setCellValue((String) list_weather_data.get(i));
 				else
 					row.createCell(column_count).setCellValue((Float) list_weather_data.get(i));
 				column_count++;
