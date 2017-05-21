@@ -54,22 +54,68 @@ public class getWeatherData {
 		byte forecastDays = 3;
 		int column_count=0;
 		OpenWeatherMap.Units units = (isMetric) ? OpenWeatherMap.Units.METRIC : OpenWeatherMap.Units.IMPERIAL;
+		System.out.println("Units : " + units);
 		OpenWeatherMap owm = new OpenWeatherMap(units, owmApiKey);
 
 		try{
-			String url = "http://api.openweathermap.org/data/2.5/weather?q=irvine&appid=5565b5455185c3b4f75b4e906831705c&mode=xml";
-
-	    DocumentBuilderFactory f = DocumentBuilderFactory.newInstance();
+			String current_weather_url 			= "http://api.openweathermap.org/data/2.5/weather?q=irvine&units=metric&appid=5565b5455185c3b4f75b4e906831705c&mode=xml";
+			String forecast_weather_url 		= "http://api.openweathermap.org/data/2.5/forecast?q=IRVINE,US&mode=xml&units=metric&cnt=1&appid=5565b5455185c3b4f75b4e906831705c";
+	    
+		DocumentBuilderFactory f = DocumentBuilderFactory.newInstance();
 	    f.setNamespaceAware(false);
 	    f.setValidating(false);
 	    DocumentBuilder builder = f.newDocumentBuilder();
-	    URLConnection urlConnection = new URL(url).openConnection();
-	    urlConnection.addRequestProperty("Accept", "application/xml");
-	    Document document = builder.parse(urlConnection.getInputStream());
+	    
+	    URLConnection current_urlConnection = new URL(current_weather_url).openConnection();
+	    URLConnection forecast_urlConnection = new URL(forecast_weather_url).openConnection();
+	    
+	    current_urlConnection.addRequestProperty("Accept", "application/xml");
+	    forecast_urlConnection.addRequestProperty("Accept", "application/xml");
+	    
+// Parse the forecast data
+	    Document document_forecast = builder.parse(forecast_urlConnection.getInputStream());
+	    document_forecast.getDocumentElement().normalize();
+	    
+	    NodeList list_forecast_weatherdata = document_forecast.getElementsByTagName("weatherdata");
+	    Element element_forecast_weatherdata = (Element) list_forecast_weatherdata.item(0);
+	    
+	    NodeList list_forecast_data = element_forecast_weatherdata.getElementsByTagName("forecast");
+	    Element element_forecast	= (Element) list_forecast_data.item(0);
+	    
+	    NodeList list_forecast_time = element_forecast_weatherdata.getElementsByTagName("time");
+	    Element element_forecast_time	= (Element) list_forecast_data.item(0);
+	    
+	    NodeList List_forecast_temperature = element_forecast_time.getElementsByTagName("temperature");
+	    Element element_forecast_temperature =    (Element) List_forecast_temperature.item(0);
+	    
+	    NodeList List_forecast_pressure = element_forecast_time.getElementsByTagName("pressure");
+	    Element element_forecast_pressure =    (Element) List_forecast_pressure.item(0);
+	    
+	    NodeList List_forecast_humidity = element_forecast_time.getElementsByTagName("humidity");
+	    Element element_forecast_humidity =    (Element) List_forecast_humidity.item(0);
+	    
+	    String forecast_temperature = element_forecast_temperature.getAttributeNode("value").getValue();
+	    String forecast_pressure = element_forecast_pressure.getAttributeNode("value").getValue();
+	    String forecast_humidity = element_forecast_humidity.getAttributeNode("value").getValue();
+	    
+	    System.out.println("Forecasted Temperature : " + forecast_temperature);
+	    System.out.println("Forecasted Pressure : " + forecast_pressure);
+	    System.out.println("Forecasted Humidity : " + forecast_humidity);
+	    
+	    System.out.println("Length : " + list_forecast_time.getLength());
+	    for(int i=0;i<list_forecast_time.getLength();i++){
+	    	System.out.println("Temperature : " + element_forecast_time.getElementsByTagName("temperature").item(0).getNodeValue());
+	    			
+	    }
+	    
+// End of parsing the forecasted data
+	    
+// Parse the current weather data
+	    Document document = builder.parse(current_urlConnection.getInputStream());
 	    document.getDocumentElement().normalize();
 	    
-	    NodeList lsit_current = document.getElementsByTagName("current");
-	    Element element_current = (Element) lsit_current.item(0);
+	    NodeList list_current = document.getElementsByTagName("current");
+	    Element element_current = (Element) list_current.item(0);
 	    
 	    NodeList  list_temperature = element_current.getElementsByTagName("temperature");
 	    Element element_temperature = (Element) list_temperature.item(0);
@@ -84,7 +130,7 @@ public class getWeatherData {
 	    Element element_wind = (Element) list_wind.item(0);
 	    
 	    
-	    //Getting the timestamp
+	    //Getting the time stamp
 	    SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH.mm.ss");
 	    Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 	    String final_timestamp = sdf.format(timestamp);
