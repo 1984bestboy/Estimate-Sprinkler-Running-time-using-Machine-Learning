@@ -40,7 +40,7 @@ import java.io.IOException;
 
 public class getWeatherData {
 
-	public static void main(String[] args) {
+	static void get_data(){
 		String excel_weather_filepath = "/Users/balaji/Documents/Github/IOT/Weather/src/package_iot/newFile.xlsx";
 		boolean isMetric = true;
 		String owmApiKey = "5565b5455185c3b4f75b4e906831705c";
@@ -263,7 +263,25 @@ public class getWeatherData {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
+	}
+	public static void main(String[] args) {
+		final long timeInterval = 10000;
+		int begin=0;
+		if(begin==0) get_data();
+		Runnable runnable = new Runnable() {
+			public void run(){
+				while(true){
+				try {
+					Thread.sleep(timeInterval);
+				} catch (InterruptedException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
+				get_data();
+}}};
+		Thread thread = new Thread(runnable);
+		  thread.start();
 	}
 
 }
