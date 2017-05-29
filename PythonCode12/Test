@@ -1,0 +1,9 @@
+import serial
+import matplotlib.pyplot as plt
+import numpy as np
+import win32com.client
+
+connected = False
+
+#finds COM port that the Arduino is on (assumes only one Arduino is connected)
+wmi = win32com.client.GetObject("winmgmts:")
