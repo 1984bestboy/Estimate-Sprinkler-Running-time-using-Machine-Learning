@@ -30,12 +30,13 @@ else:
 #time.sleep(0.25)
 #ser.setDTR(0)
 
-while i<10:
-    print "Current Value : " + ser.readline()
-    i=i+1
-    total_mositure_level += (int) (ser.readline())
-
-avg_moisture_level = (total_mositure_level/10)
-print avg_moisture_level
-# sys.stdout.write(avg_moisture_level)
+# while i<10:
+#     print "Current Value : " + ser.readline()
+#     i=i+1
+#     total_mositure_level += (int) (ser.readline())
+#
+# avg_moisture_level = (total_mositure_level/10)
+#print ser.readline()
+while 1:
+ sys.stdout.write(ser.readline())
 # sys.stdout.flush()
