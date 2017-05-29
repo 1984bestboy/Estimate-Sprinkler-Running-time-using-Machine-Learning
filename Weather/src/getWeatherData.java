@@ -175,13 +175,20 @@ public class getWeatherData {
 			list_weather_data.add(Float.parseFloat(forecast_temperature));
 			list_weather_data.add(Float.parseFloat(forecast_pressure));
 			list_weather_data.add(Float.parseFloat(forecast_humidity));
-
+			
+			
+			
 			if (forecast_precipitation != null)
 				list_weather_data.add(Float.parseFloat(forecast_precipitation));
 			else
 				list_weather_data.add("");
 			list_weather_data.add(Float.parseFloat(forecast_windspeed));
-
+			
+			//Adding Dummy Current Data
+			list_weather_data.add("");
+			list_weather_data.add("");
+			list_weather_data.add("");
+			
 			// Read the spreadsheet that needs to be updated
 			FileInputStream fie_input_stream = new FileInputStream(
 					new File("/Users/balaji/Documents/Github/IOT/Weather/src/newFile.xlsx"));
@@ -208,7 +215,10 @@ public class getWeatherData {
 				row.createCell(9).setCellValue("Forecasted Humidity (%");
 				row.createCell(10).setCellValue("Forecasted Precipitation");
 				row.createCell(11).setCellValue("Forecasted Wind Speed (mps)");
-
+				row.createCell(12).setCellValue("Current Humidity");
+				row.createCell(13).setCellValue("Current Temperaute(RHT03)");
+				row.createCell(14).setCellValue("Current Moisture");
+				
 				row = worksheet.createRow(++row_count);
 			}
 
@@ -216,7 +226,8 @@ public class getWeatherData {
 			Cell cell = null;
 			// Access the second cell in second row to update the value
 
-			for (int i = 0; i < 12; i++) {
+			for (int i = 0; i < 15; i++) {
+				if(list_weather_data.get(i)!=null)
 				System.out.println("List Output : " + list_weather_data.get(i));
 				if (i == 0)
 					row.createCell(column_count).setCellValue(final_timestamp);

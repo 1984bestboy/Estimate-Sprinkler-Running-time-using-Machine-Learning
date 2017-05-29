@@ -1,13 +1,6 @@
-# from time import sleep
-# import serial
-# ser = serial.Serial('/dev/cu.usbmodem1421',115200)
-# counter=32
-# while True:
-#     ser.write(str(chr(counter)))
-#     print ser.readline(16384)
-#     sleep(.99)
 
 # Reference - https://stackoverflow.com/questions/26946337/reading-serial-data-from-arduino-project-pyserial
+
 import serial
 import sys
 from xlrd import open_workbook
@@ -35,23 +28,10 @@ else:
     print "# using hard coded defaults " + port + " " + str(baudrate)
     ser = serial.Serial(port, baudrate)
 
-# enforce a reset before we really start
-# ser.setDTR(1)
-# time.sleep(0.25)
-# ser.setDTR(0)
-
-# while i<10:
-#     print "Current Value : " + ser.readline()
-#     i=i+1
-#     total_mositure_level += (int) (ser.readline())
-#
-# avg_moisture_level = (total_mositure_level/10)
-# print ser.readline()
-
 
 
 l = -1
-rb = open_workbook("/Users/balaji/Desktop/Workbook2.xls")
+rb = open_workbook("/Users/balaji/Documents/Github/IOT/Weather/src/package_iot/newFile.xlsx")
 wb = copy(rb)
 s = wb.get_sheet(0)
 s.write(0, 0, "Humidity")
@@ -59,15 +39,15 @@ s.write(0, 1, "Temperature")
 s.write(0, 2, "Moisture")
 while i < 10:
     print "Current Value : " + ser.readline()
-    i = i + 1
+
     string_line = ser.readline()
     list_values = string_line.split(',')
 
     k = 0
     j = 0
-    l = l + 1
+
     for item in list_values:
-        # print item
+
         j = j + 1
 
         if (j == 1):
