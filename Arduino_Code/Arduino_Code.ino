@@ -21,9 +21,17 @@ void setup()
 
 void loop()
 {
+  unsigned long Time1 = 0;
+  Time1 = millis();
+  Time1 = Time1/1000;
+   unsigned long interval = 10;
+  
     // READ DATA
     //Serial.print("DHT22, \t");
     int chk = DHT.read22(DHT22_PIN);
+    
+  Serial.print(Time1);
+  
     switch (chk)
     {
         case DHTLIB_OK: 
