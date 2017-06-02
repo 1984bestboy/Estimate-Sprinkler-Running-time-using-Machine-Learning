@@ -168,9 +168,13 @@ public class getWeatherData {
 			
 			
 			if (forecast_precipitation != null)
+				
 				list_weather_data.add(Float.parseFloat(forecast_precipitation));
 			else
-				list_weather_data.add("");
+			{
+				Float tmp_value=(float) 0.0;
+				list_weather_data.add(tmp_value);
+			}
 			list_weather_data.add(Float.parseFloat(forecast_windspeed));
 			
 			//Adding Dummy Current Data
@@ -199,14 +203,15 @@ public class getWeatherData {
 				row.createCell(4).setCellValue("Wind Speed (mps)");
 				row.createCell(5).setCellValue("Forecasted Time ( From )");
 				row.createCell(6).setCellValue("Forecasted Time ( To )");
-				row.createCell(7).setCellValue("Forecasted Temperature (celcius)");
-				row.createCell(8).setCellValue("Forecasted Pressure (hPa))");
-				row.createCell(9).setCellValue("Forecasted Humidity (%");
+				row.createCell(7).setCellValue("Forecasted_Temperature");
+				row.createCell(8).setCellValue("Forecasted Pressure (hPa)");
+				row.createCell(9).setCellValue("Forecasted_Humidity");
 				row.createCell(10).setCellValue("Forecasted Precipitation");
-				row.createCell(11).setCellValue("Forecasted Wind Speed (mps)");
+				row.createCell(11).setCellValue("Forecasted_Wind_Speed");
 				row.createCell(12).setCellValue("Current Humidity");
 				row.createCell(13).setCellValue("Current Temperaute(RHT03)");
 				row.createCell(14).setCellValue("Current Moisture");
+				row.createCell(15).setCellValue("Predicted Moisture Value");
 				
 				row = worksheet.createRow(++row_count);
 			}
@@ -254,7 +259,7 @@ public class getWeatherData {
 		}
 	}
 	public static void main(String[] args) {
-		final long timeInterval = 20000;
+		final long timeInterval = 1000;
 		int begin=0;
 		if(begin==0) get_data();
 		Runnable runnable = new Runnable() {
