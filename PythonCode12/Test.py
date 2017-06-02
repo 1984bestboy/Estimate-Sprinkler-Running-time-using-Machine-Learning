@@ -86,7 +86,7 @@ def main_code():
     ws.cell(row=last_row,column=15).value = (total_mositure_level / 10)
 
     wb.save("/Users/balaji/Documents/Github/IOT/Weather/src/newFile.xlsx")
-    t = Timer(5, main_code)
+    t = Timer(13, main_code)
     t.start()
 
 
