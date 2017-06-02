@@ -24,7 +24,7 @@ data.head()
 X=data[['Temp','Wind','Humidity']]
 
 
-# In[17]:
+
 
 X.head
 
