@@ -3,26 +3,19 @@
 # Reference - https://stackoverflow.com/questions/13381384/modify-an-existing-excel-file-using-openpyxl-in-python?rq=1
 
 import serial
-import sys
+import sys, time
 from threading import Timer
-from xlrd import open_workbook
-from xlutils.copy import copy
-import time
+from sklearn.ensemble import RandomForestRegressor
 
 
 def main_code():
     port = "/dev/cu.usbmodem1421"
     baudrate = 9600
     i = 0
-    j = 0
-    avg_moisture_level = 0.0
+
     total_mositure_level = 0.0
-
     total_humidity = 0.0
-    average_humidity = 0.0
-
     total_temperature = 0.0
-    average_temperature = 0.0
 
     if len(sys.argv) == 3:
         ser = serial.Serial(sys.argv[1], sys.argv[2])
@@ -33,37 +26,23 @@ def main_code():
 
     # New Code
     from openpyxl import load_workbook
-    import csv
+
 
     #Open an xlsx for reading
     wb = load_workbook("/Users/balaji/Documents/Github/IOT/Weather/src/newFile.xlsx")
-    #Get the current Active Sheet
-    ws = wb.get_active_sheet()
-    #You can also select a particular sheet
-    #based on sheet name
+
+    # Get the sheet name Current Weather
     ws = wb.get_sheet_by_name("Current Weather")
 
-    #ws.cell(row=1,column=12).value = 123456789
-    #ws.cell(row=1,column=13).value = 123456789
-    #ws.cell(row=1, column=14).value = 123456789
-    #save the csb file
     wb.save("/Users/balaji/Documents/Github/IOT/Weather/src/newFile.xlsx")
-    # New Code
+
     last_row=ws.max_row
-    l = -1
-    # rb = open_workbook("/Users/balaji/Documents/Github/IOT/Weather/src/package_iot/newFile.xlsx")
-    # wb = copy(rb)
-    # s = wb.get_sheet(0)
-    # s.write(0, 0, "Humidity")
-    # s.write(0, 1, "Temperature")
-    # s.write(0, 2, "Moisture")
-    # while i<1:
+
     print "Current Value : " + ser.readline()
-    i=i+1
+
     string_line = ser.readline()
     list_values = string_line.split(',')
 
-    k = 0
     j = 0
 
     for item in list_values:
@@ -86,13 +65,110 @@ def main_code():
     ws.cell(row=last_row,column=15).value = (total_mositure_level / 10)
 
     wb.save("/Users/balaji/Documents/Github/IOT/Weather/src/newFile.xlsx")
-    t = Timer(13, main_code)
-    t.start()
+    #t = Timer(13, main_code)
+    #t.start()
+
+def machine_learning():
+    print "Machine Learning code started"
+
+    import pandas as pd
+    from openpyxl import load_workbook
+
+    forecasted_temperature = 0.0000
+    forecasted_humidity = 0.0000
+    forecasted_wind_speed = 0.0000
+    data = pd.read_excel('/Users/balaji/Documents/Github/IOT/Weather/src/newFile.xlsx', sheetname='Current Weather')
+
+    print(data)
+
+    data.head()
+    X = data[['Forecasted_Temperature', 'Forecasted_Humidity', 'Forecasted_Wind_Speed']]
+
+    X.head
+
+    y = data['Current Moisture']
+
+    y.head
+
+
+    rfr = RandomForestRegressor(n_estimators=10)
+    rfr.fit(X, y, sample_weight=None)
+
+    wb = load_workbook("/Users/balaji/Documents/Github/IOT/Weather/src/newFile.xlsx")
+
+    ws = wb.get_sheet_by_name("Current Weather")
+
+    last_row = ws.max_row - 1
+
+    forecasted_temperature = ws.cell(row=last_row + 1, column=8).value
+    forecasted_humidity = ws.cell(row=last_row + 1, column=9).value
+    forecasted_wind_speed = ws.cell(row=last_row + 1, column=12).value
+
+    X_test = [forecasted_temperature, forecasted_humidity, forecasted_wind_speed]
+
+    y_pred = rfr.predict(X_test)
+
+    print(y_pred)
+    write_arduino_tmp(y_pred)
+
+    type(y_pred)
+
+    X_test.append(y_pred)
+
+    print(X_test)
+
+    ws.cell(row=last_row + 1, column=16).value = (y_pred[0])
+    wb.save("/Users/balaji/Documents/Github/IOT/Weather/src/newFile.xlsx")
+
+
+def write_to_arduino(input_value):
+    send_value=""
+    print "Reading and writing to Arduino Started"
+    arduino = serial.Serial('/dev/cu.usbmodem1421', 9600, timeout=.1)
+    time.sleep(2)
+    print "Input Value"
+
+    send_value = input_value
+    arduino.write("python")
+    print send_value
+    #while True:
+    #time.sleep(2)
+    data = arduino.readline()
+    print "The line has been read " + data +" value"
+    if data:
+        #print data.rstrip('\n')  # strip out the new lines for now
+        print "The data is: "
+        print  (data)
+        #print data
+        # (better to do .read() in the long run for this reason
+
+def write_arduino_tmp(input):
+    import serial, time
+    arduino = serial.Serial('/dev/cu.usbmodem1421', 9600, timeout=.1)
+    time.sleep(1)  # give the connection a second to settle
+    input_string = ""
+    input_value = 1254
+    input_string = str(input)
+    l=0
+    while (l<1):
+        l=l+1
+        arduino.write(input_string)
+        time.sleep(1)
+        data = arduino.readline()
+
+        print "data is :" + data
+        # if data:
+        # print data #strip out the new lines for now
+        # (better to do .read() in the long run for this reason
+
+
+#main_code()
+#time.sleep(10)
+machine_learning()
+# time.sleep(10)
+# write_arduino_tmp(
 
 
 
-main_code()
-# sys.stdout.write(string_line)
 
-#wb.save('/Users/balaji/Desktop/Workbook2.xls')
-# sys.stdout.flush()
+    

@@ -2,12 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b9b329c9-55e8-47c8-8152-f89b59711fdf" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Weather/bin/getWeatherData.class" afterPath="$PROJECT_DIR$/Weather/bin/getWeatherData.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Weather/bin/newFile.xlsx" afterPath="$PROJECT_DIR$/Weather/bin/newFile.xlsx" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Weather/src/newFile.xlsx" afterPath="$PROJECT_DIR$/Weather/src/newFile.xlsx" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PythonCode12/.idea/workspace.xml" afterPath="$PROJECT_DIR$/PythonCode12/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PythonCode12/Test.py" afterPath="$PROJECT_DIR$/PythonCode12/Test.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Weather/src/getWeatherData.java" afterPath="$PROJECT_DIR$/Weather/src/getWeatherData.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ML Code/.idea/workspace.xml" afterPath="$PROJECT_DIR$/ML Code/.idea/workspace.xml" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -63,8 +59,8 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scratches" />
       <pane id="Scope" />
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
