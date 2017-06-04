@@ -259,7 +259,7 @@ public class getWeatherData {
 		}
 	}
 	public static void main(String[] args) {
-		final long timeInterval = 1000;
+		final long timeInterval = 60000;
 		int begin=0;
 		if(begin==0) get_data();
 		Runnable runnable = new Runnable() {

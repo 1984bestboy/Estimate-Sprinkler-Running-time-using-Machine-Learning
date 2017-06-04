@@ -161,14 +161,15 @@ def write_arduino_tmp(input):
         # print data #strip out the new lines for now
         # (better to do .read() in the long run for this reason
 
-
-#main_code()
-#time.sleep(10)
-machine_learning()
+while 1:
+    time.sleep(10)
+    main_code()
+    time.sleep(10)
+    machine_learning()
+    time.sleep(71)
 # time.sleep(10)
 # write_arduino_tmp(
 
 
 
 
-    
