@@ -19,6 +19,12 @@
 
 #include <SPI.h>
 #include <Ethernet.h>
+#include <dht.h>
+
+dht DHT;
+
+
+
 
 // Enter a MAC address and IP address for your controller below.
 // The IP address will be dependent on your local network:
@@ -26,6 +32,7 @@ byte mac[] = {
   0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED
 };
 const int soil = A15;
+#define DHT22_PIN 5
 IPAddress ip(192, 168, 0, 27);
 
 // Initialize the Ethernet server library
@@ -54,6 +61,36 @@ void setup() {
 
 
 void loop() {
+  //New Temperature Code being added
+  unsigned long Time1 = 0;
+  Time1 = millis();
+  Time1 = Time1 / 1000;
+  unsigned long interval = 10;
+
+  // READ DATA
+  //Serial.print("DHT22, \t");
+  int chk = DHT.read22(DHT22_PIN);
+
+  Serial.print(Time1);
+
+  switch (chk)
+  {
+    case DHTLIB_OK:
+      //Serial.print("OK,\t");
+      break;
+    case DHTLIB_ERROR_CHECKSUM:
+      Serial.print("Checksum error,\t");
+      break;
+    case DHTLIB_ERROR_TIMEOUT:
+      Serial.print("Time out error,\t");
+      break;
+    default:
+      Serial.print("Unknown error,\t");
+      break;
+  }
+  // DISPLAY DATA
+
+  //New Temperature Code being added
   // listen for incoming clients
   EthernetClient client = server.available();
   if (client) {
@@ -76,19 +113,34 @@ void loop() {
           client.println();
           client.println("<!DOCTYPE HTML>");
           client.println("<html>");
-          client.println("Soil Moisture Sensor :");
+
+          //Displaying Humidity
+          Serial.print(DHT.humidity, 1);
+          Serial.print(",");
+          client.print("Humidity : ");
+          client.print(DHT.humidity, 1);
+          client.print(",");
+          
+          //Displaying the temperature
+          Serial.print(DHT.temperature, 1);
+          Serial.print(",");
+          client.print("Temperature : " );
+          client.print(DHT.temperature, 1);
+          client.print(",");
+          
+          client.print("Soil Moisture Sensor :");
           client.print(analogRead(soil));
           client.println("<br>");
           delay(1000);
           // output the value of each analog input pin
-                    for (int analogChannel = 0; analogChannel < 6; analogChannel++) {
-                      int sensorReading = analogRead(analogChannel);
-                      client.print("analog input ");
-                      client.print(analogChannel);
-                      client.print(" is ");
-                      client.print(sensorReading);
-                      client.println("<br />");
-                    }
+          for (int analogChannel = 0; analogChannel < 6; analogChannel++) {
+            int sensorReading = analogRead(analogChannel);
+            client.print("analog input ");
+            client.print(analogChannel);
+            client.print(" is ");
+            client.print(sensorReading);
+            client.println("<br />");
+          }
           client.println("</html>");
           break;
         }
