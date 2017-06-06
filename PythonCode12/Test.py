@@ -60,9 +60,9 @@ def main_code():
             print "Moisture : " + item
             total_mositure_level = total_mositure_level + float(item)
 
-    ws.cell(row=last_row,column=13).value = (total_humidity / 10)
-    ws.cell(row=last_row,column=14).value = (total_temperature / 10)
-    ws.cell(row=last_row,column=15).value = (total_mositure_level / 10)
+    ws.cell(row=last_row,column=13).value = (total_humidity)
+    ws.cell(row=last_row,column=14).value = (total_temperature)
+    ws.cell(row=last_row,column=15).value = (total_mositure_level)
 
     wb.save("/Users/balaji/Documents/Github/IOT/Weather/src/newFile.xlsx")
     #t = Timer(13, main_code)
@@ -162,7 +162,7 @@ def write_arduino_tmp(input):
         # (better to do .read() in the long run for this reason
 
 while 1:
-    time.sleep(10)
+    time.sleep(5)
     main_code()
     time.sleep(10)
     machine_learning()

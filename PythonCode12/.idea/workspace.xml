@@ -10,7 +10,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="CoverageDataManager">
-    <SUITE FILE_PATH="coverage/PythonCode12$Test.coverage" NAME="Test Coverage Results" MODIFIED="1496543564160" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/PythonCode12$Test.coverage" NAME="Test Coverage Results" MODIFIED="1496546054836" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/untitled5$Test.coverage" NAME="Test Coverage Results" MODIFIED="1496034117981" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
   <component name="CreatePatchCommitExecutor">
@@ -22,8 +22,8 @@
       <file leaf-file-name="Test.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Test.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2191">
-              <caret line="168" column="17" lean-forward="false" selection-start-line="168" selection-start-column="17" selection-end-line="168" selection-end-column="17" />
+            <state relative-caret-position="1845">
+              <caret line="169" column="16" lean-forward="true" selection-start-line="169" selection-start-column="16" selection-end-line="169" selection-end-column="16" />
               <folding>
                 <element signature="e#230#243#0" expanded="true" />
               </folding>
@@ -39,6 +39,11 @@
         <option value="Python Script" />
       </list>
     </option>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>sleep</find>
+    </findStrings>
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
@@ -667,8 +672,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Test.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2191">
-          <caret line="168" column="17" lean-forward="false" selection-start-line="168" selection-start-column="17" selection-end-line="168" selection-end-column="17" />
+        <state relative-caret-position="1845">
+          <caret line="169" column="16" lean-forward="true" selection-start-line="169" selection-start-column="16" selection-end-line="169" selection-end-column="16" />
           <folding>
             <element signature="e#230#243#0" expanded="true" />
           </folding>
