@@ -38,6 +38,7 @@ EthernetClient client;
 int current_pressure=0,current_temperature,run_time=0;
 void setup()
 {
+  
   Serial.begin(9600);
   Serial.println("Starting WebWx");
   Serial.println("connecting...");
@@ -52,7 +53,8 @@ void setup()
     delay(2000);
   } else {
     Serial.println("connection failed");
-  }  
+  } 
+  pinMode(50, OUTPUT); 
 }
 
 void loop() {
@@ -74,18 +76,29 @@ void loop() {
       //current_run_time    = 
 //     current_pressure = string_current_pressure.toInt();
 //   index_temperature_end=index_temperature_end-4;
-//    current_run_time = string_current_run_time.toInt();
+    current_run_time = string_current_run_time.toInt();
     Serial.println("Temperature is : " + string_current_temperature);
-    Serial.println("Sprinkler Run Time is :" + string_current_run_time);
+    Serial.println("Sprinkler Run Time is :");
+    Serial.print(current_run_time);
+    
   }
 
   if (!client.connected()) {
     Serial.println();
+    
+//    int current_time=millis();
+//    Serial.println("Current Time:" + current_time);
+//    while((millis()-current_time)<current_run_time){
+//      Serial.println("Difference:" + (millis()-current_time));
+//      digitalWrite(50, HIGH);
+//    }
     Serial.println("Disconnected");
     Serial.println("==================================");
     Serial.println("");
     client.stop();
-
+    digitalWrite(50, HIGH);
+    delay(current_run_time);
+    digitalWrite(50, LOW);
     // Time until next update
     //Serial.println("Waiting");
     for (int t = 1; t <= 15; t++) {
