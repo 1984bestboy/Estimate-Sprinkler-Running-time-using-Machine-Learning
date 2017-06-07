@@ -15,7 +15,7 @@
 	<%@ page import="java.lang.*"%>
 	<%@ page import="java.util.ArrayList"%>
 	<%
-		float temperature = 0, pressure = 0, soil_moisture = 0;
+		float temperature = 0, pressure = 0, soil_moisture = 0,running_time=10;
 
 
 		//code for updating the records
@@ -28,13 +28,14 @@
 					.getConnection("jdbc:mysql://ec2-54-193-70-40.us-west-1.compute.amazonaws.com:3306/weatherdb?autoReconnect=true&useSSL=false", "root", "root");
 			Statement stmt = connection.createStatement();
 			// prepare SQL statement template that's to be repeatedly excuted
-			String string_update_sensors = "UPDATE sensor SET temperature = ?, pressure=?,soil_moisture=? WHERE id = 1";
+			String string_update_sensors = "UPDATE sensor SET temperature = ?, pressure=?,soil_moisture=?,running_time=? WHERE id = 1";
 			String retrieve_sensor_values = "select * from sensor limit 1";
 			ResultSet rs_old = stmt.executeQuery(retrieve_sensor_values);
 			if (rs_old.next()) {
 				temperature   = rs_old.getFloat(2);
 				pressure 	  = rs_old.getFloat(3);
 				soil_moisture = rs_old.getFloat(4);
+				running_time  = rs_old.getFloat(5);
 			}
 			if (request.getParameter("temperature") != null)
 				temperature = Float.valueOf(request.getParameter("temperature"));
@@ -45,12 +46,17 @@
 			if (request.getParameter("soil_moisture") != null)
 				soil_moisture = Float.valueOf(request.getParameter("soil_moisture"));
 			
+			if (request.getParameter("running_time") != null)
+				running_time = Float.valueOf(request.getParameter("running_time"));
+			
 			if (temperature != 0 || pressure != 0 || soil_moisture != 0) {
 				PreparedStatement prepare_update_sensor_data = connection.prepareStatement(string_update_sensors);
-
+			
+			
 				prepare_update_sensor_data.setFloat(1, temperature);
 				prepare_update_sensor_data.setFloat(2, pressure);
 				prepare_update_sensor_data.setFloat(3, soil_moisture);
+				prepare_update_sensor_data.setFloat(4, running_time);
 				prepare_update_sensor_data.executeUpdate();
 			}
 			ResultSet rs = stmt.executeQuery(retrieve_sensor_values);
@@ -65,7 +71,14 @@
 				out.println("Soil Moisture : " + rs.getFloat(4));
 				out.println("<br>");
 				out.println("Sprinkler Run Time");%>
-				<input type="text" value=10><%
+				<form method="get" action="sensor_data.jsp">
+				<input type="text" name="running_time" value=<%=rs.getFloat(5)%>>
+				<%-- <a href=sensor_data.jsp?temperature=<%=temperature%>&pressure=<%=pressure%>&running_time=<%=running_time%>> --%>
+				<input type="submit" value="update"></tr>
+				<!-- </a> -->
+				</form>
+				
+				<%
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -73,4 +86,4 @@
 	%>
 
 </body>
-</html>
+</html>"
