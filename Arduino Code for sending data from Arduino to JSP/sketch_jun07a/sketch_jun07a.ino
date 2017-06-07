@@ -22,7 +22,7 @@ char tagStr[MAX_STRING_LEN] = "";
 char dataStr[MAX_STRING_LEN] = "";
 char tmpStr[MAX_STRING_LEN] = "";
 char endTag[3] = {'<', '/', '\0'};
-int len;
+int len,current_run_time=0;
 String timeToken="0";
 // Flags to differentiate XML tags from document elements (ie. data)
 boolean tagFlag = false;
@@ -64,14 +64,19 @@ void loop() {
     Serial.println(line);
      int index_temp_start=line.indexOf("Temperature :");
      int index_temperature = line.indexOf("Temperature :");
-     int index_temperature_end = line.indexOf("Pressure")-4;
+     int index_temperature_end = line.indexOf("Pressure")-5;
      
-      current_temperature = line.substring(index_temperature+14,index_temperature_end).toInt();
-      current_pressure    = line.substring(line.indexOf("Pressure :")+10,line.indexOf("Soil Moisture :")-4);
+     String  string_current_temperature = line.substring(index_temperature+14,index_temperature_end);
+     String string_current_run_time = line.substring(line.indexOf("Sprinkler Run Time : ")+21,line.indexOf("Sprinkler Run Time : ")+27);
+      string_current_temperature.trim();
+      string_current_run_time.trim();
+      //current_pressure    = line.substring(line.indexOf("Pressure :")+10,line.indexOf("Soil Moisture :")-4);
       //current_run_time    = 
 //     current_pressure = string_current_pressure.toInt();
 //   index_temperature_end=index_temperature_end-4;
-    Serial.println("Temperature is : " + line.substring(index_temperature+14,index_temperature_end));
+//    current_run_time = string_current_run_time.toInt();
+    Serial.println("Temperature is : " + string_current_temperature);
+    Serial.println("Sprinkler Run Time is :" + string_current_run_time);
   }
 
   if (!client.connected()) {

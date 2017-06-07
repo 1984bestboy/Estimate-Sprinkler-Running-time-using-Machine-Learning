@@ -70,7 +70,7 @@
 				out.println("<br>");
 				out.println("Soil Moisture : " + rs.getFloat(4));
 				out.println("<br>");
-				out.println("Sprinkler Run Time");%>
+				out.println("Sprinkler Run Time : " + rs.getFloat(5));%>
 	<form method="get" action="sensor_data.jsp">
 		<input type="text" name="running_time" value=<%=rs.getFloat(5)%>>
 		<%-- <a href=sensor_data.jsp?temperature=<%=temperature%>&pressure=<%=pressure%>&running_time=<%=running_time%>> --%>
