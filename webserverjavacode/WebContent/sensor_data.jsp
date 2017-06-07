@@ -56,13 +56,16 @@
 			ResultSet rs = stmt.executeQuery(retrieve_sensor_values);
 			if (rs.next()) {
 				//code for updating the records
-				out.println("Went inside");
-				out.println("<br>");
+/* 				out.println("Went inside");
+				out.println("<br>"); */
 				out.println("Temperature : " + rs.getFloat(2));
 				out.println("<br>");
 				out.println("Pressure : " + rs.getFloat(3));
 				out.println("<br>");
 				out.println("Soil Moisture : " + rs.getFloat(4));
+				out.println("<br>");
+				out.println("Sprinkler Run Time");%>
+				<input type="text" value=10><%
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
