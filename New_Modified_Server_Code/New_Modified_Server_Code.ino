@@ -22,7 +22,7 @@
 #include <dht.h>
 
 dht DHT;
-
+EthernetClient client;
 
 
 
@@ -33,7 +33,7 @@ byte mac[] = {
 };
 const int soil = A15;
 #define DHT22_PIN 5
-IPAddress ip(192, 168, 0, 27);
+IPAddress ip(192, 168, 0, 26);
 
 // Initialize the Ethernet server library
 // with the IP address and port you want to use
@@ -91,73 +91,95 @@ void loop() {
   // DISPLAY DATA
 
   //New Temperature Code being added
-  // listen for incoming clients
-  EthernetClient client = server.available();
-  if (client) {
-    Serial.println("new client");
-    // an http request ends with a blank line
-    boolean currentLineIsBlank = true;
-    while (client.connected()) {
-      if (client.available()) {
-        char c = client.read();
-        Serial.write(c);
-        // if you've gotten to the end of the line (received a newline
-        // character) and the line is blank, the http request has ended,
-        // so you can send a reply
-        if (c == '\n' && currentLineIsBlank) {
-          // send a standard http response header
-          client.println("HTTP/1.1 200 OK");
-          client.println("Content-Type: text/html");
-          client.println("Connection: close");  // the connection will be closed after completion of the response
-          client.println("Refresh: 5");  // refresh the page automatically every 5 sec
-          client.println();
-          client.println("<!DOCTYPE HTML>");
-          client.println("<html>");
-
-          //Displaying Humidity
-          Serial.print(DHT.humidity, 1);
-          Serial.print(",");
-          client.print("Humidity : ");
-          client.print(DHT.humidity, 1);
-          client.print(",");
-          
-          //Displaying the temperature
-          Serial.print(DHT.temperature, 1);
-          Serial.print(",");
-          client.print("Temperature : " );
-          client.print(DHT.temperature, 1);
-          client.print(",");
-          
-          client.print("Soil Moisture Sensor :");
-          client.print(analogRead(soil));
-          client.println("<br>");
-          delay(1000);
-          // output the value of each analog input pin
-          for (int analogChannel = 0; analogChannel < 6; analogChannel++) {
-            int sensorReading = analogRead(analogChannel);
-            client.print("analog input ");
-            client.print(analogChannel);
-            client.print(" is ");
-            client.print(sensorReading);
-            client.println("<br />");
-          }
-          client.println("</html>");
-          break;
-        }
-        if (c == '\n') {
-          // you're starting a new line
-          currentLineIsBlank = true;
-        } else if (c != '\r') {
-          // you've gotten a character on the current line
-          currentLineIsBlank = false;
-        }
-      }
-    }
-    // give the web browser time to receive the data
-    delay(1);
-    // close the connection:
-    client.stop();
-    Serial.println("client disconnected");
+  String data="Soil Moisture Sensor : 10";
+  //  New Server Code
+  if (client.connect("ec2-54-193-70-40.us-west-1.compute.amazonaws.com", 8080)) { // REPLACE WITH YOUR SERVER ADDRESS
+    Serial.println("Client Connected");
+    client.println("GET /web_server/sensor_data.jsp?temperature=10 HTTP/1.1");
+    client.println("Host: ec2-54-193-70-40.us-west-1.compute.amazonaws.com"); // SERVER ADDRESS HERE TOO
+    client.println("Content-Type: application/x-www-form-urlencoded");
+    client.print("Content-Length: ");
+    client.println(data.length()); 
+//    client.print("Soil Moisture Sensor :");
+//    client.print(analogRead(soil));
+    client.println();
+    Serial.println(data);
+  }else{
+    Serial.println("Client not connected");
   }
+
+  if (client.connected()) {
+    client.stop();  // DISCONNECT FROM THE SERVER
+  }
+  delay(5000);
+  //  New Server Code
+  // listen for incoming clients
+  //  EthernetClient client = server.available();
+  //  if (client) {
+  //    Serial.println("new client");
+  //    // an http request ends with a blank line
+  //    boolean currentLineIsBlank = true;
+  //    while (client.connected()) {
+  //      if (client.available()) {
+  //        char c = client.read();
+  //        Serial.write(c);
+  //        // if you've gotten to the end of the line (received a newline
+  //        // character) and the line is blank, the http request has ended,
+  //        // so you can send a reply
+  //        if (c == '\n' && currentLineIsBlank) {
+  //          // send a standard http response header
+  //          client.println("HTTP/1.1 200 OK");
+  //          client.println("Content-Type: text/html");
+  //          client.println("Connection: close");  // the connection will be closed after completion of the response
+  //          client.println("Refresh: 5");  // refresh the page automatically every 5 sec
+  //          client.println();
+  //          client.println("<!DOCTYPE HTML>");
+  //          client.println("<html>");
+  //
+  //          //Displaying Humidity
+  //          Serial.print(DHT.humidity, 1);
+  //          Serial.print(",");
+  //          client.print("Humidity : ");
+  //          client.print(DHT.humidity, 1);
+  //          client.print(",");
+  //
+  //          //Displaying the temperature
+  //          Serial.print(DHT.temperature, 1);
+  //          Serial.print(",");
+  //          client.print("Temperature : " );
+  //          client.print(DHT.temperature, 1);
+  //          client.print(",");
+  //
+  //          client.print("Soil Moisture Sensor :");
+  //          client.print(analogRead(soil));
+  //          client.println("<br>");
+  //          delay(1000);
+  //          // output the value of each analog input pin
+  //          for (int analogChannel = 0; analogChannel < 6; analogChannel++) {
+  //            int sensorReading = analogRead(analogChannel);
+  //            client.print("analog input ");
+  //            client.print(analogChannel);
+  //            client.print(" is ");
+  //            client.print(sensorReading);
+  //            client.println("<br />");
+  //          }
+  //          client.println("</html>");
+  //          break;
+  //        }
+  //        if (c == '\n') {
+  //          // you're starting a new line
+  //          currentLineIsBlank = true;
+  //        } else if (c != '\r') {
+  //          // you've gotten a character on the current line
+  //          currentLineIsBlank = false;
+  //        }
+  //      }
+  //    }
+  //    // give the web browser time to receive the data
+  //    delay(1);
+  //    // close the connection:
+  //    client.stop();
+  //    Serial.println("client disconnected");
+  //  }
 }
 
