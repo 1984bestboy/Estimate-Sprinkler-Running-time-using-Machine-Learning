@@ -11,6 +11,7 @@
 
 #include <SPI.h>
 #include <Ethernet.h>
+#include <WString.h>
 
 // Define Constants
 // Max string length may have to be adjusted depending on data to be extracted
@@ -34,7 +35,7 @@ byte server[] = { 54, 193, 70, 40 }; // www.weather.gov
 
 // Start ethernet client
 EthernetClient client;
-
+int current_pressure=0,current_temperature,run_time=0;
 void setup()
 {
   Serial.begin(9600);
@@ -57,10 +58,20 @@ void setup()
 void loop() {
 
   // Read serial data in from web:
-  while (client.available()) {
+  if (client.available()) {
     String line = client.readStringUntil('\r');
     timeToken=line.substring(line.length()-19,line.length()-2);
     Serial.println(line);
+     int index_temp_start=line.indexOf("Temperature :");
+     int index_temperature = line.indexOf("Temperature :");
+     int index_temperature_end = line.indexOf("Pressure")-4;
+     
+      current_temperature = line.substring(index_temperature+14,index_temperature_end).toInt();
+      current_pressure    = line.substring(line.indexOf("Pressure :")+10,line.indexOf("Soil Moisture :")-4);
+      //current_run_time    = 
+//     current_pressure = string_current_pressure.toInt();
+//   index_temperature_end=index_temperature_end-4;
+    Serial.println("Temperature is : " + line.substring(index_temperature+14,index_temperature_end));
   }
 
   if (!client.connected()) {
