@@ -25,7 +25,7 @@
 
 			// Connect to the test database
 			Connection connection = DriverManager
-					.getConnection("jdbc:mysql://ec2-54-193-70-40.us-west-1.compute.amazonaws.com:3306/weatherdb?autoReconnect=true&useSSL=false", "root", "root");
+					.getConnection("jdbc:mysql:///weatherdb?autoReconnect=true&useSSL=false", "root", "root");
 			Statement stmt = connection.createStatement();
 			// prepare SQL statement template that's to be repeatedly excuted
 			String string_update_sensors = "UPDATE sensor SET temperature = ?, pressure=?,soil_moisture=?,running_time=? WHERE id = 1";

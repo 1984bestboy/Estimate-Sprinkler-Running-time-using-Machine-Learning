@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -64,7 +65,7 @@ public class servlet_sensor_data extends HttpServlet {
 			Class.forName("com.mysql.jdbc.Driver");
 			Connection test_connection = null;
 			test_connection = (Connection) DriverManager
-					.getConnection("jdbc:mysql://ec2-54-193-70-40.us-west-1.compute.amazonaws.com:3306/weatherdb?autoReconnect=true&useSSL=false", "root", "root");
+					.getConnection("jdbc:mysql:///weatherdb?autoReconnect=true&useSSL=false", "root", "root");
 
 			if (test_connection == null) {
 				System.out.println("Not successful");
@@ -75,6 +76,15 @@ public class servlet_sensor_data extends HttpServlet {
 			if(!string_search.equals(empty_string)){
 			Statement stmt = test_connection.createStatement();
 			String search_query = "select * from sensor limit 1;";
+			String string_update_sensors = "UPDATE sensor SET running_time=? WHERE id = 1";
+			
+			if(!string_search.equals(empty_string)){
+				PreparedStatement prepare_update_sensor_data = test_connection.prepareStatement(string_update_sensors);
+				
+				
+				prepare_update_sensor_data.setFloat(1, Float.parseFloat(string_search));
+				prepare_update_sensor_data.executeUpdate();
+			}
 			ResultSet rs = stmt.executeQuery(search_query);
 			ArrayList<String> list_movies = new ArrayList<String>();
 			StringBuilder sb_movies = new StringBuilder();
