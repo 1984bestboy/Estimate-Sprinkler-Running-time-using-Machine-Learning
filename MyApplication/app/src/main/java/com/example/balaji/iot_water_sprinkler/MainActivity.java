@@ -10,57 +10,165 @@ import android.widget.TextView;
 
 import org.w3c.dom.Text;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
-
-    EditText edit_update1;
-    Button button_update1;
-    TextView text_time1;
+    EditText edit_search;
+    Button button_search, button_prev, button_next;
+    TextView text_search;
+    int result_count;
+    int current_page = 0;
+    int results_perpage = 10;
+    //int current_page = results_perpage;
+    List<String> list_movies = new ArrayList<String>();
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        edit_update1 = (EditText) findViewById(R.id.edit_update);
-        button_update1 = (Button) findViewById(R.id.button_update);
-        text_time1 = (TextView) findViewById(R.id.textview_time);
-        button_update1.setOnClickListener(this);
+        edit_search = (EditText) findViewById(R.id.edit_update);
+        button_search = (Button) findViewById(R.id.button_update);
+        text_search = (TextView) findViewById(R.id.textview_time);
+//        button_prev = (Button) findViewById(R.id.prev);
+//        button_next = (Button) findViewById(R.id.next);
+        button_search.setOnClickListener(this);
+//        button_prev.setOnClickListener(this);
+//        button_next.setOnClickListener(this);
+
     }
+
 
     @Override
     public void onClick(View v) {
 
         switch (v.getId()) {
             case R.id.button_update:
+                list_movies.clear();
                 new Thread(new Runnable() {
                     public void run() {
 
                         try {
-                            URL url = new URL("http://54.183.57.169:8080/Project_Test_Android/test_servlet");
+                            URL url = new URL("http://54.193.70.40:8080/web_server/servlet_sensor_data");
                             URLConnection connection = url.openConnection();
 
-                            String string_update_time = edit_update1.getText().toString();
-                            Log.d("Update Value", string_update_time);
+                            String inputString = edit_search.getText().toString();
+
+                            Log.d("inputString", inputString);
 
                             connection.setDoOutput(true);
                             OutputStreamWriter out = new OutputStreamWriter(connection.getOutputStream());
-                            out.write(string_update_time);
+                            out.write(inputString);
                             out.close();
-                        } catch (MalformedURLException e) {
-                            e.printStackTrace();
-                        } catch (IOException e) {
-                            e.printStackTrace();
+
+                            BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+
+                            String returnString = "";
+                            String str = "";
+                            Log.d("String is:", str);
+                            while ((returnString = in.readLine()) != null) {
+                                str = str + returnString;
+                            }
+                            Log.d("String is:", str);
+                            final String m = str;
+                            final String[] opt_split_string = str.split(",");
+                            Log.d("empty", opt_split_string[0]);
+                            if (!opt_split_string[0].equals("emptydata"))
+                                result_count = opt_split_string.length;
+                            else
+                                result_count = 0;
+                            Log.d("result count", Integer.toString(result_count));
+                            in.close();
+
+                            runOnUiThread(new Runnable() {
+                                public void run() {
+//                                    if (m.contains("true")) {
+                                    String display_text = "";
+
+                                    for (int i = 0; i < result_count; i++) {
+                                        list_movies.add(opt_split_string[i]);
+                                    }
+
+                                    if (result_count != 0) {
+                                        for (int i = 0; i<1; i++) {
+                                            display_text = display_text + opt_split_string[i] + "\n";
+                                            Log.d("Final String", display_text);
+                                        }
+                                    }
+
+                                    if (result_count != 0) {
+                                        text_search = (TextView) findViewById(R.id.textview_time);
+                                        text_search.setText(display_text);
+                                    } else {
+                                        text_search = (TextView) findViewById(R.id.textview_time);
+                                        text_search.setText("No results retrieved");
+                                    }
+//                                        Intent i = new Intent(Main2Activity.this,Main2Activity.class);
+//                                        startActivity(i);
+//                                    }else{
+//                                        Toast.makeText(Main2Activity.this, "Incorrect username or password", Toast.LENGTH_LONG).show();
+//                                    }
+
+                                }
+                            });
+
+                        } catch (Exception e) {
+                            Log.d("Exception", e.toString());
                         }
 
                     }
                 }).start();
                 break;
+//            case R.id.prev:
+//                String display_text = "";
+//                //Toast.makeText(Main2Activity.this, "previous button is pressed", Toast.LENGTH_LONG).show();
+//                try {
+//                    if (current_page - results_perpage >= 0)
+//                        current_page = current_page - results_perpage;
+//
+//                    for (int i = current_page; i < current_page + results_perpage; i++) {
+//                        if (list_movies.get(i) != null) {
+//                            display_text = display_text + list_movies.get(i) + "\n";
+//
+//                        }
+//                    }
+//
+//                    text_search.setText(display_text);
+//
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//                break;
+//            case R.id.next:
+//                String display_text1 = "";
+//                //Toast.makeText(Main2Activity.this, "next button is pressed", Toast.LENGTH_LONG).show();
+//                try {
+//                    if ((current_page + results_perpage) < result_count)
+//                        current_page += results_perpage;
+//                    for (int i = current_page; i < (current_page + results_perpage); i++) {
+//                        if (list_movies.get(i) != null) {
+//                            display_text1 = display_text1 + list_movies.get(i) + "\n";
+//                        }
+////                        text_search = (TextView) findViewById(R.id.display_text);
+////                        text_search.setText("");
+//                        text_search.setText(display_text1);
+//                    }
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//                break;
         }
     }
+
 }
+
+
+
