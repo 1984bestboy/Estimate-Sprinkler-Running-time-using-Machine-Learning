@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    tools:context="com.example.balaji.iot_water_sprinkler.MainActivity">
+
+    <TextView
+        android:id="@+id/weather_results"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Water Sprinkler Time!"
+        android:textSize="30sp" />
+
+    <TextView
+        android:id="@+id/textview_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/weather_results"
+        android:hint="Time will be displayed here"
+        android:textSize="15sp" />
+
+    <EditText
+        android:id="@+id/edit_update"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textview_time"
+        android:layout_marginTop="20dp"
+        android:hint="Enter the time in milli seconds" />
+
+    <Button
+        android:id="@+id/button_update"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/edit_update"
+        android:text="update" />
+
+</RelativeLayout>
