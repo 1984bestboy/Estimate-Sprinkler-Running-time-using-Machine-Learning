@@ -9,7 +9,7 @@ from sklearn.ensemble import RandomForestRegressor
 
 
 def main_code():
-    port = "/dev/cu.usbmodem1421"
+    port = "/dev/cu.usbmodem9"
     baudrate = 9600
     i = 0
 
@@ -103,7 +103,7 @@ def machine_learning():
     forecasted_temperature = ws.cell(row=last_row + 1, column=8).value
     forecasted_humidity = ws.cell(row=last_row + 1, column=9).value
     forecasted_wind_speed = ws.cell(row=last_row + 1, column=12).value
-
+    current_moisture = ws.cell(row=last_row, column=15).value
     X_test = [forecasted_temperature, forecasted_humidity, forecasted_wind_speed]
 
     y_pred = rfr.predict(X_test)
@@ -114,9 +114,14 @@ def machine_learning():
     type(y_pred)
 
     X_test.append(y_pred)
-
+    sprinkle_time = (y_pred[0] - current_moisture) / 10
+    X_test.append(y_pred)
+    X_test.append(sprinkle_time)
+    print "Sprinkle Time :"
+    print sprinkle_time
     print(X_test)
 
+    ws.cell(row=last_row + 1, column=17).value = sprinkle_time
     ws.cell(row=last_row + 1, column=16).value = (y_pred[0])
     wb.save("/Users/balaji/Documents/Github/IOT/Weather/src/newFile.xlsx")
 
@@ -124,7 +129,7 @@ def machine_learning():
 def write_to_arduino(input_value):
     send_value=""
     print "Reading and writing to Arduino Started"
-    arduino = serial.Serial('/dev/cu.usbmodem1421', 9600, timeout=.1)
+    arduino = serial.Serial('/dev/cu.usbmodem9', 9600, timeout=.1)
     time.sleep(2)
     print "Input Value"
 
@@ -144,7 +149,7 @@ def write_to_arduino(input_value):
 
 def write_arduino_tmp(input):
     import serial, time
-    arduino = serial.Serial('/dev/cu.usbmodem1421', 9600, timeout=.1)
+    arduino = serial.Serial('/dev/cu.usbmodem9', 9600, timeout=.1)
     time.sleep(1)  # give the connection a second to settle
     input_string = ""
     input_value = 1254

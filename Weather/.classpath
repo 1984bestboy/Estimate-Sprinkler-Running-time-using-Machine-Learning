@@ -8,5 +8,10 @@
 	<classpathentry kind="lib" path="/Users/balaji/Documents/Github/IOT/Jar Files/poi-3.16/poi-3.16.jar"/>
 	<classpathentry kind="lib" path="/Users/balaji/Documents/Github/IOT/Jar Files/poi-3.16/poi-ooxml-3.16.jar"/>
 	<classpathentry kind="lib" path="/Users/balaji/Documents/Github/IOT/Jar Files/poi-3.16/poi-ooxml-schemas-3.16.jar"/>
+	<classpathentry kind="lib" path="/Users/balaji/Documents/Github/Updated_CS122B/JAR FILES/gson-2.3.1.jar"/>
+	<classpathentry kind="lib" path="/Users/balaji/Documents/Github/Updated_CS122B/JAR FILES/javax.json-1.0.jar"/>
+	<classpathentry kind="lib" path="/Users/balaji/Documents/Github/Updated_CS122B/JAR FILES/mysql-connector-java-5.1.41-bin.jar"/>
+	<classpathentry kind="lib" path="/Users/balaji/Documents/Github/Updated_CS122B/JAR FILES/recaptcha4j-0.0.7.jar"/>
+	<classpathentry kind="lib" path="/Users/balaji/Documents/Github/Updated_CS122B/JAR FILES/servlet-api.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

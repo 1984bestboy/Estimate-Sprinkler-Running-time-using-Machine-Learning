@@ -101,7 +101,7 @@ public class servlet_sensor_data extends HttpServlet {
 				OutputStreamWriter writer = new OutputStreamWriter(response.getOutputStream());
 				if(!send_output.equals(empty_string))
 				writer.write(send_output);
-				else writer.write("132,");
+				else writer.write(send_output);
 				writer.flush();
 				writer.close();
 //				String json = new Gson().toJson(list_movies);
